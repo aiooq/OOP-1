@@ -8,7 +8,7 @@ try:
     
     try:
         from tasks.task1 import Task as task1
-        # tasks.append(task1()())
+        tasks.append(task1()())
     except ImportError:
         pass
 
