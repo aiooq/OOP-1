@@ -8,7 +8,6 @@ import sys
 from os.path import dirname
 sys.path.append(dirname(dirname(__file__)))
 from include.main import Manager as main
-
 class Worker:
     def __init__(self, name, surname, position, wage, bonus):
         self.name = name
