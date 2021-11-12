@@ -16,20 +16,38 @@ from datetime import datetime
 
 class TrafficLight:
     def __init__(self):
+        self.tread = None
         self.color = None
         self.name = "TrafficLight"
+
+    def __call__(self, *args):
+        if not self.get_is_works():
+            self.tread = threading.Thread(target=self.__works, args=args)
+            self.tread.start()
+            return True
+        else:
+            return False
+
+    def get_is_works(self):
+        if self.tread == None:
+            return False
+        return self.tread.is_alive()
 
     def set_color(self, color, seconds):
         self.color = color
         print(f"{datetime.now()}: {self.name} Mode = {self.color}")
         time.sleep(seconds)
 
-    def running(self):
+    def __works(self, *args):
+        args=args[0]
         print(f"{datetime.now()}: {self.name} Started")
-        self.set_color("Red",7)
-        self.set_color("Yellow",2)
-        self.set_color("Green",5)
+        self.set_color("Red",args[0])
+        self.set_color("Yellow",args[1])
+        self.set_color("Green",args[2])
         print(f"{datetime.now()}: {self.name} Stopped")
+
+    def running(self, *args):
+        return self.__call__(args)
 
 class Task:
     def __call__(self):
@@ -38,12 +56,9 @@ class Task:
 
     def main(self, value, out):
         traffic_light = TrafficLight()
+        if traffic_light.running(7,2,5):
+            while traffic_light.get_is_works():
+                print(f"{datetime.now()}: {traffic_light.name}: Get Mode = {traffic_light.color}")
+                time.sleep(1)
 
-        tread = threading.Thread(target=traffic_light.running)
-        tread.start()
-        while tread.is_alive():
-            print(f"{datetime.now()}: {traffic_light.name}: Get Mode = {traffic_light.color}")
-            time.sleep(1)
-        
-
-        
+main()([Task()()])
